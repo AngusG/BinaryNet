@@ -21,8 +21,9 @@ import gzip
 
 import binary_net
 
-from pylearn2.datasets.mnist import MNIST
-from pylearn2.utils import serial
+#from pylearn2.datasets.mnist import MNIST
+#from pylearn2.utils import serial
+from utils import load_dataset
 
 from collections import OrderedDict
 
@@ -90,31 +91,34 @@ if __name__ == "__main__":
     
     print('Loading MNIST dataset...')
     
+    '''
     train_set = MNIST(which_set= 'train', start=0, stop = 50000, center = False)
     valid_set = MNIST(which_set= 'train', start=50000, stop = 60000, center = False)
     test_set = MNIST(which_set= 'test', center = False)
+    '''
+    X_train, y_train, X_val, y_val, X_test, y_test = load_dataset()
     
     # bc01 format    
     # Inputs in the range [-1,+1]
     # print("Inputs in the range [-1,+1]")
-    train_set.X = 2* train_set.X.reshape(-1, 1, 28, 28) - 1.
-    valid_set.X = 2* valid_set.X.reshape(-1, 1, 28, 28) - 1.
-    test_set.X = 2* test_set.X.reshape(-1, 1, 28, 28) - 1.
+    X_train = 2* X_train.reshape(-1, 1, 28, 28) - 1.
+    X_val = 2* X_val.reshape(-1, 1, 28, 28) - 1.
+    X_test = 2* X_test.reshape(-1, 1, 28, 28) - 1.
     
     # flatten targets
-    train_set.y = np.hstack(train_set.y)
-    valid_set.y = np.hstack(valid_set.y)
-    test_set.y = np.hstack(test_set.y)
+    y_train = np.hstack(y_train)
+    y_val = np.hstack(y_val)
+    y_test = np.hstack(y_test)
     
     # Onehot the targets
-    train_set.y = np.float32(np.eye(10)[train_set.y])    
-    valid_set.y = np.float32(np.eye(10)[valid_set.y])
-    test_set.y = np.float32(np.eye(10)[test_set.y])
+    y_train = np.float32(np.eye(10)[y_train])    
+    y_val = np.float32(np.eye(10)[y_val])
+    y_test = np.float32(np.eye(10)[y_test])
     
     # for hinge loss
-    train_set.y = 2* train_set.y - 1.
-    valid_set.y = 2* valid_set.y - 1.
-    test_set.y = 2* test_set.y - 1.
+    y_train = 2* y_train - 1.
+    y_val = 2* y_val - 1.
+    y_test = 2* y_test - 1.
 
     print('Building the MLP...') 
     
@@ -209,8 +213,8 @@ if __name__ == "__main__":
             batch_size,
             LR_start,LR_decay,
             num_epochs,
-            train_set.X,train_set.y,
-            valid_set.X,valid_set.y,
-            test_set.X,test_set.y,
+            X_train,y_train,
+            X_val,y_val,
+            X_test,y_test,
             save_path,
             shuffle_parts)
