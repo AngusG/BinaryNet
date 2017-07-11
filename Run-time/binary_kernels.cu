@@ -1,6 +1,6 @@
 
 #include <stdio.h>
-#define BLOCK_SIZE 32
+#define BLOCK_SIZE 16
 
 // CUDA tutorial: http://www.nvidia.com/docs/IO/116711/sc11-cuda-c-basics.pdf
 // http://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#shared-memory
